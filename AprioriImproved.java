@@ -7,21 +7,23 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
-
-public class Apriori{
+public class AprioriImproved{
 	public double minSupport;
 	public ArrayList<ArrayList<String>> transactions;
 	public long numberTrans;
 	public ArrayList<ArrayList<String>> candidates;
 	public int numberitemset;
 	public ArrayList<ArrayList<String>> itemset;
-	public Set<String> itemsetWithOne;
 	public ArrayList<ArrayList<String>> frequentSet;
+	public Hashtable<String, Integer> uniqueItem;
 	
-	Apriori(String fileName, double minSupport){
+	AprioriImproved(String fileName, double minSupport){
 		this.minSupport = minSupport;
-		this.itemsetWithOne = new HashSet<>();
+		this.uniqueItem= new Hashtable<String, Integer>();
 		this.transactions = this.dataFromFile(fileName); //read data from file
 		this.numberTrans = this.transactions.size();
 		this.numberitemset = 0;
@@ -42,7 +44,11 @@ public class Apriori{
 				while(st.hasMoreTokens()){
 					String token = st.nextToken();
 					transaction.add(token);
-					this.itemsetWithOne.add(token);
+					if(this.uniqueItem.containsKey(token)){
+						this.uniqueItem.put(token,this.uniqueItem.get(token)+1);
+					}else{
+						this.uniqueItem.put(token,1);
+					}
 				}
 				t.add(transaction);
 			}
@@ -83,13 +89,9 @@ public class Apriori{
 	
 	public ArrayList<ArrayList<String>> findFrequent(){
 		ArrayList<ArrayList<String>> frequent = new  ArrayList<ArrayList<String>>();
-		for(String s : this.itemsetWithOne){
+		for(String s : this.uniqueItem.keySet()){
 			ArrayList<String> array = new ArrayList<String>();
-			int c =0;
-			for(ArrayList<String> trans: this.transactions){
-				if(trans.contains(s)) c++;
-			}
-			if(c >= this.numberTrans*this.minSupport){
+			if(this.uniqueItem.get(s) >= this.numberTrans*this.minSupport){
 				array.add(s);
 				frequent.add(array);
 			}
@@ -108,6 +110,7 @@ public class Apriori{
 					array.remove(j);
 					if(!this.itemset.contains(array)){
 						fr = false;
+						break;
 					}
 					array = t;
 				}
@@ -122,6 +125,7 @@ public class Apriori{
 	
 	public void aprioriMain(){
 		this.numberitemset = 1;
+		int number = 0;
 		do{
 			getCandidates();  //get candidates
 			prunning(); // prune the candidates
@@ -144,6 +148,19 @@ public class Apriori{
 					this.itemset.add(a);
 				}
 			}
+			for(int i = 0; i < this.transactions.size(); i++){
+				int notThere = 0;
+				for(ArrayList<String> a: this.itemset){
+					for(String s: a){
+						if(!this.transactions.get(i).contains(s)){
+							notThere++;
+						}
+					}
+				}
+				if(notThere == this.itemset.size()){
+					this.transactions.remove(i);
+				}
+			}
 			this.frequentSet.addAll(this.itemset);
 			this.numberitemset++;
 		}while(this.itemset.size() >0);
@@ -160,11 +177,11 @@ public class Apriori{
 		}
 	}
 	public static void main(String[] args) {
-		Apriori apriori = new Apriori("data.txt", 0.6);
+		AprioriImproved aprioriImproved = new AprioriImproved("data.txt", 0.6);
 		long start = System.currentTimeMillis();
-		apriori.aprioriMain();
+		aprioriImproved.aprioriMain();
 		long end = System.currentTimeMillis();
-		apriori.printFrequentItemSet();
+		aprioriImproved.printFrequentItemSet();
 		System.out.println("Run time: " + (end - start)/1000.0);
 	}
 

@@ -178,7 +178,12 @@ public class AprioriImproved{
 		//System.out.println("There are a total of: " + result+ " frequent itemsets");
 	}
 	public static void main(String[] args) {
-		AprioriImproved aprioriImproved = new AprioriImproved("data.txt", 0.6);
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Please give the name of the file you want to mine frequent set [current on directory: data.txt & test.txt");
+		String file = scan.next();
+		System.out.println("Enter minimum support in ratio [Example 0.6]");
+		double minSupport = scan.nextDouble();
+		AprioriImproved aprioriImproved = new AprioriImproved(file, minSupport);
 		long start = System.currentTimeMillis();
 		aprioriImproved.aprioriMain();
 		long end = System.currentTimeMillis();

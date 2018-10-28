@@ -155,7 +155,7 @@ public class Apriori{
 		Collections.sort(sortedList,(a1,a2) -> Integer.compare(a1.size(),a2.size()));
 		for(ArrayList<String> a: sortedList){
 			System.out.print("{");
-			for(int i=0;i<a.a.size();i++){
+			for(int i=0;i<a.size();i++){
 				System.out.print(a.get(i));
 				if(i != a.size()-1) System.out.print(", ");
 			}
@@ -166,7 +166,12 @@ public class Apriori{
 		//System.out.println("There are a total of: " + result+ " frequent itemsets");
 	}
 	public static void main(String[] args) {
-		Apriori apriori = new Apriori("data.txt", 0.23);
+		Scanner scan = new Scanner(System.in);
+		System.out.println("Please give the name of the file you want to mine frequent set [current on directory: data.txt & test.txt");
+		String file = scan.next();
+		System.out.println("Enter minimum support in ratio [Example 0.6]");
+		double minSupport = scan.nextDouble();
+		Apriori apriori = new Apriori(file, minSupport);
 		long start = System.currentTimeMillis();
 		apriori.aprioriMain();
 		long end = System.currentTimeMillis();

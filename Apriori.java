@@ -150,17 +150,23 @@ public class Apriori{
 	}
 	
 	public void printFrequentItemSet(){
-		for(ArrayList<String> a: this.frequentSet){
+		int result =0;
+		ArrayList<ArrayList<String>> sortedList = new ArrayList<ArrayList<String>>(this.frequentSet);
+		Collections.sort(sortedList,(a1,a2) -> Integer.compare(a1.size(),a2.size()));
+		for(ArrayList<String> a: sortedList){
 			System.out.print("{");
-			for(String s: a){
-				System.out.print(s + ", ");
+			for(int i=0;i<a.a.size();i++){
+				System.out.print(a.get(i));
+				if(i != a.size()-1) System.out.print(", ");
 			}
 			System.out.print("}");
 			System.out.println();
+			result++;
 		}
+		//System.out.println("There are a total of: " + result+ " frequent itemsets");
 	}
 	public static void main(String[] args) {
-		Apriori apriori = new Apriori("data.txt", 0.6);
+		Apriori apriori = new Apriori("data.txt", 0.23);
 		long start = System.currentTimeMillis();
 		apriori.aprioriMain();
 		long end = System.currentTimeMillis();

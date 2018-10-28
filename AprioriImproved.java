@@ -1,15 +1,10 @@
-import java.util.HashSet;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
+import java.util.Collections;
 
 public class AprioriImproved{
 	public double minSupport;
@@ -167,14 +162,20 @@ public class AprioriImproved{
 	}
 	
 	public void printFrequentItemSet(){
-		for(ArrayList<String> a: this.frequentSet){
+		int result =0;
+		ArrayList<ArrayList<String>> sortedList = new ArrayList<ArrayList<String>>(this.frequentSet);
+		Collections.sort(sortedList,(a1,a2) -> Integer.compare(a1.size(),a2.size()));
+		for(ArrayList<String> a: sortedList){
 			System.out.print("{");
-			for(String s: a){
-				System.out.print(s + ", ");
+			for(int i=0;i<a.size();i++){
+				System.out.print(a.get(i));
+				if(i != a.size()-1) System.out.print(", ");
 			}
 			System.out.print("}");
 			System.out.println();
+			result ++;
 		}
+		//System.out.println("There are a total of: " + result+ " frequent itemsets");
 	}
 	public static void main(String[] args) {
 		AprioriImproved aprioriImproved = new AprioriImproved("data.txt", 0.6);

@@ -267,7 +267,7 @@ public class FPGrowth{
 			System.out.println();
 			result ++;
 		}
-		//System.out.println("There are a total of: " + result+ " frequent itemsets");
+		System.out.println("There are a total of: " + result+ " frequent itemsets");
 	}
 	public static void main(String[] args) {
 		Scanner scan = new Scanner(System.in);
